@@ -60,9 +60,10 @@
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      transition: padding .3s;
+      transition: padding .3s, transform .3s;
     }
     nav.scrolled { padding: 12px 24px; }
+    nav.nav-hidden { transform: translateY(-100%); }
 
     .nav-logo {
       font-family: var(--font-head);
@@ -509,10 +510,6 @@
   </div>
   <div class="hero-grid"></div>
   <div class="hero-content">
-    <div class="hero-badge">
-      <div class="hero-badge-dot"></div>
-      Scotland's Web Design Studio
-    </div>
     <h1>Grow Your Business<br>in the <em>Digital World</em></h1>
     <p class="hero-sub">We craft premium, high-performance websites that turn visitors into customers — at prices that won't break the bank.</p>
     <div class="hero-actions">
@@ -694,7 +691,7 @@
         <li>Ongoing support available</li>
         <li>Affordable for businesses of all sizes</li>
       </ul>
-      <a href="mailto:Siteupenterprises@gmail.com" class="btn btn-primary" style="width:100%;justify-content:center;">Book a Free Discovery Call →</a>
+      <a href="/cdn-cgi/l/email-protection#46152f32233336232832233436342f35233506212b272f2a6825292b" class="btn btn-primary" style="width:100%;justify-content:center;">Book a Free Discovery Call →</a>
     </div>
   </div>
 </section>
@@ -714,8 +711,8 @@
       </div>
       <h3 class="avail-title">No Opening Hours.<br>No Closing Time.</h3>
       <p class="avail-desc">Reach out anytime — morning, night, weekends, or holidays. Simply send us an email and we'll reply as soon as possible. Your business never sleeps, and neither do we.</p>
-      <a href="mailto:Siteupenterprises@gmail.com" class="avail-email" onclick="haptic()">
-        <span>📧</span> Siteupenterprises@gmail.com
+      <a href="/cdn-cgi/l/email-protection#8ddee4f9e8f8fde8e3f9e8fffdffe4fee8fecdeae0ece4e1a3eee2e0" class="avail-email" onclick="haptic()">
+        <span>📧</span> <span class="__cf_email__" data-cfemail="df8cb6abbaaaafbab1abbaadafadb6acbaac9fb8b2beb6b3f1bcb0b2">[email&#160;protected]</span>
       </a>
     </div>
   </div>
@@ -736,7 +733,7 @@
           <div class="contact-detail-icon">📧</div>
           <div class="contact-detail-text">
             <small>Email Us</small>
-            <a href="mailto:Siteupenterprises@gmail.com">Siteupenterprises@gmail.com</a>
+            <a href="/cdn-cgi/l/email-protection#26754f52435356434852435456544f55435566414b474f4a0845494b"><span class="__cf_email__" data-cfemail="96c5ffe2f3e3e6f3f8e2f3e4e6e4ffe5f3e5d6f1fbf7fffab8f5f9fb">[email&#160;protected]</span></a>
           </div>
         </div>
         <div class="contact-detail">
@@ -805,7 +802,7 @@
       <div class="footer-links">
         <h4>Contact</h4>
         <ul>
-          <li><a href="mailto:Siteupenterprises@gmail.com">Siteupenterprises@gmail.com</a></li>
+          <li><a href="/cdn-cgi/l/email-protection#a7f4ced3c2d2d7c2c9d3c2d5d7d5ced4c2d4e7c0cac6cecb89c4c8ca"><span class="__cf_email__" data-cfemail="d487bda0b1a1a4b1baa0b1a6a4a6bda7b1a794b3b9b5bdb8fab7bbb9">[email&#160;protected]</span></a></li>
           <li><a href="#availability">Active 24/7</a></li>
           <li><a href="#contact">Get a Free Quote</a></li>
         </ul>
@@ -820,10 +817,20 @@
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
   const navbar = document.getElementById('navbar');
+  let lastScroll = 0;
   window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 40);
+    const current = window.scrollY;
+    navbar.classList.toggle('scrolled', current > 40);
+    if (window.innerWidth <= 768) {
+      if (current > lastScroll && current > 80) {
+        navbar.classList.add('nav-hidden');
+      } else {
+        navbar.classList.remove('nav-hidden');
+      }
+    }
+    lastScroll = current;
   });
 
   const hamburger = document.getElementById('hamburger');
@@ -879,23 +886,4 @@
     setTimeout(() => {
       const subject = encodeURIComponent(`New Enquiry from ${name}`);
       const body = encodeURIComponent(`Hi SiteUp Team,\n\nName: ${name}\nEmail: ${email}\nBusiness: ${document.getElementById('fbiz').value.trim() || 'N/A'}\n\nMessage:\n${msg}`);
-      window.location.href = `mailto:Siteupenterprises@gmail.com?subject=${subject}&body=${body}`;
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-      showToast('Opening your email client... 📧');
-    }, 800);
-  }
-
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', e => {
-      const target = document.querySelector(a.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        const top = target.getBoundingClientRect().top + window.scrollY - 72;
-        window.scrollTo({ top, behavior: 'smooth' });
-      }
-    });
-  });
-</script>
-</body>
-</html>
+      window.location.href = `mailto:Siteupenterprises@gmail.com?subject=${subject}&body=${
