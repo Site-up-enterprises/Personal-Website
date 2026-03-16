@@ -1,1 +1,1446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SiteUp Enterprises — Web Design Scotland</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    :root {
+      --bg: #0b0c10;
+      --surface: #13141a;
+      --surface2: #1c1e27;
+      --accent: #00e5a0;
+      --accent2: #0af;
+      --text: #f0f2f5;
+      --muted: #7a7f94;
+      --border: rgba(255,255,255,0.07);
+      --glow: rgba(0,229,160,0.18);
+      --radius: 18px;
+      --font-head: 'Syne', sans-serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+      opacity: .4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      background: rgba(11,12,16,0.82);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s;
+    }
+    nav.scrolled { padding: 12px 24px; }
+
+    .nav-logo {
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    .nav-logo-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%,100% { box-shadow: 0 0 0 0 var(--glow); }
+      50% { box-shadow: 0 0 0 6px transparent; }
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .nav-links a {
+      font-size: .85rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: 50px;
+      transition: color .2s, background .2s;
+    }
+    .nav-links a:hover { color: var(--text); background: var(--surface2); }
+
+    .nav-cta {
+      background: var(--accent) !important;
+      color: #000 !important;
+      font-weight: 600 !important;
+      padding: 9px 20px !important;
+      border-radius: 50px !important;
+      transition: transform .15s, box-shadow .15s, background .2s !important;
+    }
+    .nav-cta:hover {
+      transform: scale(1.04);
+      box-shadow: 0 0 20px var(--glow) !important;
+      background: #00ffb3 !important;
+    }
+    .nav-cta:active { transform: scale(0.97) !important; }
+
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 8px;
+      transition: background .2s;
+    }
+    .hamburger:active { background: var(--surface2); }
+    .hamburger span {
+      width: 24px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform .3s, opacity .3s;
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      top: 64px; left: 0; right: 0;
+      background: rgba(11,12,16,0.97);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 24px 24px;
+      z-index: 99;
+      flex-direction: column;
+      gap: 4px;
+      transform: translateY(-10px);
+      opacity: 0;
+      transition: transform .3s, opacity .3s;
+    }
+    .mobile-menu.open { transform: translateY(0); opacity: 1; }
+    .mobile-menu a {
+      font-size: 1.05rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-decoration: none;
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      transition: color .2s, background .2s;
+      display: block;
+    }
+    .mobile-menu a:hover, .mobile-menu a:active { color: var(--text); background: var(--surface2); }
+    .mobile-menu .mob-cta {
+      margin-top: 8px;
+      background: var(--accent);
+      color: #000 !important;
+      font-weight: 700 !important;
+      text-align: center;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      opacity: 0.07;
+    }
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(0,229,160,0.08) 0%, transparent 70%),
+                  linear-gradient(to bottom, transparent 40%, var(--bg) 100%);
+    }
+
+    /* Grid pattern */
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 70% at 50% 40%, black 20%, transparent 80%);
+      z-index: 0;
+    }
+
+    .hero-content { position: relative; z-index: 1; max-width: 700px; }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.25);
+      border-radius: 50px;
+      padding: 6px 16px 6px 10px;
+      font-size: .78rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      animation: fadeUp .7s ease both;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+    }
+
+    .hero h1 {
+      font-family: var(--font-head);
+      font-size: clamp(2.6rem, 9vw, 5rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 22px;
+      animation: fadeUp .7s .1s ease both;
+    }
+    .hero h1 em {
+      font-style: normal;
+      background: linear-gradient(120deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(.95rem, 2.5vw, 1.15rem);
+      color: var(--muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-weight: 300;
+      animation: fadeUp .7s .2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp .7s .3s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-family: var(--font-body);
+      font-weight: 600;
+      font-size: .95rem;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      outline: none;
+      transition: transform .15s, box-shadow .2s, background .2s, color .2s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .btn:active { transform: scale(0.96); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+      box-shadow: 0 0 0 0 var(--glow);
+    }
+    .btn-primary:hover {
+      background: #00ffb3;
+      box-shadow: 0 8px 32px var(--glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      background: var(--surface2);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover {
+      background: var(--surface);
+      border-color: rgba(255,255,255,0.15);
+      transform: translateY(-2px);
+    }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: .75rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      animation: fadeUp .7s .5s ease both;
+    }
+    .scroll-line {
+      width: 1px; height: 40px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0% { transform: scaleY(0); transform-origin: top; }
+      50% { transform: scaleY(1); transform-origin: top; }
+      51% { transform: scaleY(1); transform-origin: bottom; }
+      100% { transform: scaleY(0); transform-origin: bottom; }
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 24px;
+    }
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      text-align: center;
+    }
+    .stat-item {}
+    .stat-num {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      display: block;
+      letter-spacing: -0.03em;
+    }
+    .stat-label {
+      font-size: .78rem;
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: .03em;
+    }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 80px 24px; }
+    .section-inner { max-width: 900px; margin: 0 auto; }
+
+    .section-tag {
+      display: inline-block;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--muted);
+      font-size: 1rem;
+      font-weight: 300;
+      max-width: 500px;
+    }
+
+    /* ── SERVICES ── */
+    #services { background: var(--bg); }
+
+    .services-header { margin-bottom: 48px; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .service-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+      transition: transform .2s, border-color .2s, box-shadow .2s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .service-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,229,160,0.2);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 0 1px rgba(0,229,160,0.08);
+    }
+    .service-card:hover::before { opacity: 1; }
+
+    .service-icon {
+      width: 48px; height: 48px;
+      background: rgba(0,229,160,0.1);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.4rem;
+    }
+    .service-card h3 {
+      font-family: var(--font-head);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+      letter-spacing: -0.02em;
+    }
+    .service-card p {
+      font-size: .88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    /* ── WHY US ── */
+    #why { background: var(--surface); }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: center;
+      margin-top: 48px;
+    }
+
+    .why-image {
+      border-radius: var(--radius);
+      overflow: hidden;
+      position: relative;
+    }
+    .why-image img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      filter: brightness(.8) saturate(1.1);
+      transition: transform .4s;
+    }
+    .why-image:hover img { transform: scale(1.03); }
+    .why-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+    }
+
+    .why-points { display: flex; flex-direction: column; gap: 20px; }
+
+    .why-point {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      padding: 18px;
+      background: var(--surface2);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      transition: border-color .2s;
+    }
+    .why-point:hover { border-color: rgba(0,229,160,0.2); }
+
+    .why-point-icon {
+      width: 36px; height: 36px;
+      min-width: 36px;
+      background: rgba(0,229,160,0.12);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .why-point-text h4 {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: .95rem;
+      margin-bottom: 4px;
+      letter-spacing: -.01em;
+    }
+    .why-point-text p {
+      font-size: .83rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── PROCESS ── */
+    #process { background: var(--bg); }
+
+    .process-steps {
+      margin-top: 48px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      left: 23px;
+      top: 0; bottom: 0;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--accent), transparent);
+    }
+
+    .step {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+      padding: 24px 0;
+      position: relative;
+    }
+    .step-num {
+      width: 46px; height: 46px;
+      min-width: 46px;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: .9rem;
+      color: var(--accent);
+      position: relative;
+      z-index: 1;
+    }
+    .step-body h3 {
+      font-family: var(--font-head);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      letter-spacing: -.02em;
+      margin-top: 10px;
+    }
+    .step-body p {
+      font-size: .87rem;
+      color: var(--muted);
+      font-weight: 300;
+    }
+
+    /* ── PRICING TEASER ── */
+    #pricing { background: var(--surface); }
+
+    .pricing-card {
+      margin-top: 40px;
+      background: var(--surface2);
+      border: 1px solid rgba(0,229,160,0.25);
+      border-radius: 24px;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .pricing-card::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 25px;
+      background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(0,170,255,.1), transparent 60%);
+      z-index: 0;
+      pointer-events: none;
+    }
+    .pricing-card > * { position: relative; z-index: 1; }
+
+    .pricing-badge {
+      display: inline-block;
+      background: var(--accent);
+      color: #000;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .pricing-headline {
+      font-family: var(--font-head);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      margin-bottom: 12px;
+    }
+
+    .pricing-desc {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 32px;
+      text-align: left;
+    }
+    .pricing-features li {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: .88rem;
+      color: var(--text);
+    }
+    .pricing-features li::before {
+      content: '✓';
+      width: 20px; height: 20px;
+      background: rgba(0,229,160,0.15);
+      color: var(--accent);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* ── AVAILABILITY ── */
+    #availability {
+      background: var(--bg);
+      text-align: center;
+    }
+
+    .availability-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 32px;
+      max-width: 600px;
+      margin: 40px auto 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .availability-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(0,229,160,0.06), transparent);
+    }
+    .avail-pulse {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(0,229,160,0.1);
+      border: 1px solid rgba(0,229,160,0.3);
+      border-radius: 50px;
+      padding: 8px 20px;
+      margin-bottom: 24px;
+      position: relative;
+    }
+    .avail-pulse-dot {
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 var(--glow);
+      animation: livePulse 1.5s ease-in-out infinite;
+    }
+    @keyframes livePulse {
+      0% { box-shadow: 0 0 0 0 rgba(0,229,160,0.5); }
+      70% { box-shadow: 0 0 0 10px transparent; }
+      100% { box-shadow: 0 0 0 0 transparent; }
+    }
+    .avail-pulse span { font-size: .85rem; font-weight: 600; color: var(--accent); }
+
+    .avail-title {
+      font-family: var(--font-head);
+      font-size: 1.6rem;
+      font-weight: 800;
+      letter-spacing: -.03em;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .avail-desc {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 300;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .avail-email {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 22px;
+      font-size: .9rem;
+      color: var(--accent);
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background .2s, border-color .2s, transform .15s;
+      position: relative;
+    }
+    .avail-email:hover {
+      background: rgba(0,229,160,0.08);
+      border-color: rgba(0,229,160,0.3);
+      transform: translateY(-2px);
+    }
+    .avail-email:active { transform: scale(0.97); }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--surface); }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+      margin-top: 48px;
+    }
+
+    .contact-info h3 {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 14px;
+      letter-spacing: -.03em;
+    }
+    .contact-info p {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 300;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .contact-detail {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .contact-detail-icon {
+      width: 40px; height: 40px;
+      background: rgba(0,229,160,0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    .contact-detail-text small { display: block; font-size: .72rem; color: var(--muted); margin-bottom: 2px; text-transform: uppercase; letter-spacing: .08em; }
+    .contact-detail-text span { font-size: .9rem; font-weight: 500; }
+    .contact-detail-text a {
+      font-size: .9rem;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .contact-detail-text a:hover { text-decoration: underline; }
+
+    .contact-form {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px 24px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block;
+      font-size: .8rem;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 6px;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-family: var(--font-body);
+      font-size: .9rem;
+      color: var(--text);
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+      resize: none;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(0,229,160,0.12);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: #3a3d4d; }
+
+    .form-submit {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      color: #000;
+      font-family: var(--font-body);
+      font-weight: 700;
+      font-size: .95rem;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      margin-top: 4px;
+    }
+    .form-submit:hover {
+      background: #00ffb3;
+      box-shadow: 0 8px 24px var(--glow);
+      transform: translateY(-1px);
+    }
+    .form-submit:active { transform: scale(0.97); }
+
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 20px;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #070809;
+      border-top: 1px solid var(--border);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    .footer-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 32px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+    }
+    .footer-brand p {
+      font-size: .85rem;
+      color: var(--muted);
+      max-width: 280px;
+      margin-top: 10px;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+    .footer-links h4 {
+      font-family: var(--font-head);
+      font-size: .85rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+    .footer-links ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-links ul li a {
+      font-size: .88rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .footer-links ul li a:hover { color: var(--text); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p { font-size: .78rem; color: var(--muted); }
+    .footer-bottom a { color: var(--accent); text-decoration: none; }
+
+    /* ── SCROLL ANIMATIONS ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: .88rem;
+      font-weight: 500;
+      z-index: 1000;
+      transition: transform .3s ease;
+      white-space: nowrap;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .mobile-menu { display: flex; }
+
+      .why-grid { grid-template-columns: 1fr; }
+      .why-image { display: none; }
+
+      .contact-grid { grid-template-columns: 1fr; }
+
+      .stats-inner { grid-template-columns: repeat(3,1fr); gap: 8px; }
+      .stat-num { font-size: 1.5rem; }
+
+      .footer-top { flex-direction: column; gap: 28px; }
+
+      section { padding: 60px 20px; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; align-items: center; }
+      .btn { width: 100%; max-width: 280px; justify-content: center; }
+      .stats-inner { gap: 4px; }
+      .stat-num { font-size: 1.3rem; }
+      .stat-label { font-size: .7rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="navbar">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-dot"></div>
+    SiteUp<span>.</span>
+  </a>
+  <div class="nav-links">
+    <a href="#services">Services</a>
+    <a href="#why">About</a>
+    <a href="#process">Process</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="#contact" class="nav-cta">Get in Touch</a>
+  </div>
+  <div class="hamburger" id="hamburger" aria-label="Menu" role="button" tabindex="0">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#services" onclick="closeMobile()">Services</a>
+  <a href="#why" onclick="closeMobile()">About Us</a>
+  <a href="#process" onclick="closeMobile()">Our Process</a>
+  <a href="portfolio.html" onclick="closeMobile()">Portfolio</a>
+  <a href="#contact" class="mob-cta" onclick="closeMobile()">Get in Touch →</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1400&auto=format&fit=crop&q=60" alt="Modern workspace" loading="eager">
+  </div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Scotland's Web Design Studio
+    </div>
+    <h1>Grow Your Business<br>in the <em>Digital World</em></h1>
+    <p class="hero-sub">We craft premium, high-performance websites that turn visitors into customers — at prices that won't break the bank.</p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn btn-primary">Start Your Project →</a>
+      <a href="#services" class="btn btn-secondary">See What We Do</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    scroll
+  </div>
+</section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item reveal">
+      <span class="stat-num">24/7</span>
+      <span class="stat-label">Always Active</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">100%</span>
+      <span class="stat-label">Custom Built</span>
+    </div>
+    <div class="stat-item reveal">
+      <span class="stat-num">Fast</span>
+      <span class="stat-label">Turnaround</span>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="section-inner">
+    <div class="services-header reveal">
+      <span class="section-tag">What We Offer</span>
+      <h2 class="section-title">Everything Your Business<br>Needs Online</h2>
+      <p class="section-sub">From a sleek landing page to a full e-commerce platform — we build it all with precision and purpose.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <div class="service-icon">🎨</div>
+        <h3>Custom Website Design</h3>
+        <p>Fully bespoke websites designed from scratch. No templates — every pixel crafted to reflect your brand identity and wow your visitors.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">📱</div>
+        <h3>Mobile-First Development</h3>
+        <p>Over 60% of web traffic is mobile. We build with a mobile-first mindset so your site looks stunning on every screen and device.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🚀</div>
+        <h3>Performance Optimisation</h3>
+        <p>Lightning-fast load times, clean code, and SEO-ready structure that helps Google find you and keeps visitors engaged.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🛒</div>
+        <h3>E-Commerce Solutions</h3>
+        <p>Sell your products or services online with beautiful, conversion-focused storefronts that make buying effortless.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔍</div>
+        <h3>SEO & Online Visibility</h3>
+        <p>We implement modern SEO techniques so you appear higher in search results and attract more of the right customers.</p>
+      </div>
+      <div class="service-card reveal">
+        <div class="service-icon">🔧</div>
+        <h3>Ongoing Support</h3>
+        <p>Your website isn't a one-off job. We're here whenever you need updates, improvements, or technical support.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section id="why">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Why SiteUp</span>
+      <h2 class="section-title">Premium Quality.<br>Affordable Prices.</h2>
+      <p class="section-sub">We believe every business — big or small — deserves a world-class online presence without the world-class price tag.</p>
+    </div>
+    <div class="why-grid">
+      <div class="why-image reveal">
+        <img src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&auto=format&fit=crop&q=70" alt="Web design process">
+      </div>
+      <div class="why-points">
+        <div class="why-point reveal">
+          <div class="why-point-icon">💡</div>
+          <div class="why-point-text">
+            <h4>Modern Techniques, Real Results</h4>
+            <p>We use the latest web technologies and design trends to ensure your site stands out in a crowded market.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-point-icon">💰</div>
+          <div class="why-point-text">
+            <h4>Pricing Discussed on Your Terms</h4>
+            <p>No hidden fees or pushy packages. We chat through your needs and work out a price that's fair for everyone.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-point-icon">🇬🇧</div>
+          <div class="why-point-text">
+            <h4>Local Scottish Business</h4>
+            <p>We're right here in Scotland — a local team who genuinely cares about helping local businesses grow and thrive.</p>
+          </div>
+        </div>
+        <div class="why-point reveal">
+          <div class="why-point-icon">⚡</div>
+          <div class="why-point-text">
+            <h4>Fast Delivery, No Fuss</h4>
+            <p>We work efficiently and communicate clearly so you know exactly where your project is at all times.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">How It Works</span>
+      <h2 class="section-title">Simple, Transparent Process</h2>
+      <p class="section-sub">Getting your dream website is easier than you think. Here's how we make it happen.</p>
+    </div>
+    <div class="process-steps">
+      <div class="step reveal">
+        <div class="step-num">01</div>
+        <div class="step-body">
+          <h3>Reach Out via Email</h3>
+          <p>Drop us an email with a little info about your business and what you're looking for. We'll get back to you as soon as possible.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">02</div>
+        <div class="step-body">
+          <h3>Discovery Call</h3>
+          <p>We'll schedule a quick call to learn more about your goals, style preferences, and budget so we can tailor the perfect solution.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">03</div>
+        <div class="step-body">
+          <h3>Design & Build</h3>
+          <p>Our team gets to work creating your bespoke website. We keep you in the loop throughout the entire build process.</p>
+        </div>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">04</div>
+        <div class="step-body">
+          <h3>Review & Launch</h3>
+          <p>You review the final site, we make any tweaks you need, then we launch your new online presence to the world.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING TEASER -->
+<section id="pricing">
+  <div class="section-inner" style="text-align:center;">
+    <div class="reveal">
+      <span class="section-tag">Pricing</span>
+      <h2 class="section-title">Transparent & Affordable</h2>
+      <p class="section-sub" style="margin: 0 auto;">We don't believe in one-size-fits-all pricing. Every project is unique, so we tailor a price that's right for you.</p>
+    </div>
+    <div class="pricing-card reveal">
+      <div class="pricing-badge">Tailored to You</div>
+      <h3 class="pricing-headline">Discussed Over a Call</h3>
+      <p class="pricing-desc">
+        We believe premium websites shouldn't cost a fortune. Our pricing is straightforward, fair, and agreed before we start — no surprises, ever.
+      </p>
+      <ul class="pricing-features">
+        <li>Fully custom design — no cookie-cutter templates</li>
+        <li>Mobile-optimised & fast-loading</li>
+        <li>SEO foundations built in</li>
+        <li>Revisions included until you're happy</li>
+        <li>Ongoing support available</li>
+        <li>Affordable for businesses of all sizes</li>
+      </ul>
+      <a href="mailto:Siteupenterprises@gmail.com" class="btn btn-primary" style="width:100%;justify-content:center;">Book a Free Discovery Call →</a>
+    </div>
+  </div>
+</section>
+
+<!-- AVAILABILITY -->
+<section id="availability">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Always Here</span>
+      <h2 class="section-title">We Never Close</h2>
+      <p class="section-sub" style="margin: 0 auto;">Unlike a traditional agency, we're available around the clock. Whenever inspiration strikes — or you have a question — we're on it.</p>
+    </div>
+    <div class="availability-card reveal">
+      <div class="avail-pulse">
+        <div class="avail-pulse-dot"></div>
+        <span>Online &amp; Active 24/7</span>
+      </div>
+      <h3 class="avail-title">No Opening Hours.<br>No Closing Time.</h3>
+      <p class="avail-desc">Reach out anytime — morning, night, weekends, or holidays. Simply send us an email and we'll reply as soon as possible. Your business never sleeps, and neither do we.</p>
+      <a href="mailto:Siteupenterprises@gmail.com" class="avail-email" onclick="haptic()">
+        <span>📧</span> Siteupenterprises@gmail.com
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="reveal">
+      <span class="section-tag">Contact</span>
+      <h2 class="section-title">Let's Build Something<br>Great Together</h2>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-info reveal">
+        <h3>Get in Touch</h3>
+        <p>Ready to take your business online or upgrade your existing website? Send us a message — we'd love to hear about your project and see how we can help.</p>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📧</div>
+          <div class="contact-detail-text">
+            <small>Email Us</small>
+            <a href="mailto:Siteupenterprises@gmail.com">Siteupenterprises@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">📍</div>
+          <div class="contact-detail-text">
+            <small>Based In</small>
+            <span>Scotland, United Kingdom</span>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-detail-icon">🕐</div>
+          <div class="contact-detail-text">
+            <small>Availability</small>
+            <span>24/7 — We're always on</span>
+          </div>
+        </div>
+      </div>
+      <div class="contact-form reveal">
+        <div id="formWrap">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" id="fname" placeholder="John Smith" autocomplete="name">
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="femail" placeholder="john@yourbusiness.com" autocomplete="email">
+          </div>
+          <div class="form-group">
+            <label>Business Name (Optional)</label>
+            <input type="text" id="fbiz" placeholder="Your Business Ltd.">
+          </div>
+          <div class="form-group">
+            <label>Tell Us About Your Project</label>
+            <textarea id="fmsg" rows="4" placeholder="What are you looking to build? Any details help..."></textarea>
+          </div>
+          <button class="form-submit" id="submitBtn" onclick="submitForm()">Send Message →</button>
+        </div>
+        <div class="form-success" id="formSuccess">
+          ✅ Thanks! We'll be in touch very soon.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo" style="text-decoration:none;">
+          <div class="nav-logo-dot"></div>
+          SiteUp<span style="color:var(--accent)">.</span>
+        </a>
+        <p>Scotland's go-to web design studio for businesses looking to grow their online presence — with premium results at accessible prices.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Navigate</h4>
+        <ul>
+          <li><a href="#services">Services</a></li>
+          <li><a href="#why">About Us</a></li>
+          <li><a href="#process">Process</a></li>
+          <li><a href="portfolio.html">Portfolio</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="mailto:Siteupenterprises@gmail.com">Siteupenterprises@gmail.com</a></li>
+          <li><a href="#availability">Active 24/7</a></li>
+          <li><a href="#contact">Get a Free Quote</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 SiteUp Enterprises. All rights reserved.</p>
+      <p>Built with ❤️ in <a href="#home">Scotland</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ── NAV SCROLL ──
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    navbar.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // ── HAMBURGER ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', () => {
+    hamburger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  hamburger.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') hamburger.click();
+  });
+  function closeMobile() {
+    hamburger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }
+
+  // ── SCROLL REVEAL ──
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), i * 60);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── HAPTIC (mobile vibration) ──
+  function haptic() {
+    if (navigator.vibrate) navigator.vibrate(10);
+  }
+
+  // Add haptic to all buttons/links
+  document.querySelectorAll('.btn, .form-submit, .avail-email, .nav-cta, .mob-cta').forEach(el => {
+    el.addEventListener('click', haptic);
+  });
+
+  // ── TOAST ──
+  function showToast(msg, duration = 3000) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), duration);
+  }
+
+  // ── CONTACT FORM ──
+  function submitForm() {
+    const name = document.getElementById('fname').value.trim();
+    const email = document.getElementById('femail').value.trim();
+    const msg = document.getElementById('fmsg').value.trim();
+
+    if (!name) { showToast('Please enter your name 👋'); haptic(); return; }
+    if (!email || !email.includes('@')) { showToast('Please enter a valid email ✉️'); haptic(); return; }
+    if (!msg) { showToast('Tell us about your project 💬'); haptic(); return; }
+
+    haptic();
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '.7';
+
+    // Simulate submission then redirect to mailto
+    setTimeout(() => {
+      const subject = encodeURIComponent(`New Enquiry from ${name}`);
+      const body = encodeURIComponent(`Hi SiteUp Team,\n\nName: ${name}\nEmail: ${email}\nBusiness: ${document.getElementById('fbiz').value.trim() || 'N/A'}\n\nMessage:\n${msg}`);
+      window.location.href = `mailto:Siteupenterprises@gmail.com?subject=${subject}&body=${body}`;
+      document.getElementById('formWrap').style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+      showToast('Opening your email client... 📧');
+    }, 800);
+  }
+
+  // ── SMOOTH NAV SCROLL ──
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        const offset = 72;
+        const top = target.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      }
+    });
+  });
+</script>
+</body>
+</html>
